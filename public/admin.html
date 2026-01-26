@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | CF Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Dark Mode */
+        .dark body {
+            background-color: #050505;
+            color: #ffffff;
+        }
+
+        .dark .glass {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dark .glass-header {
+            background: rgba(17, 24, 39, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Light Mode */
+        body {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .glass,
+        .glass-header {
+            backdrop-filter: blur(10px);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <nav class="glass-header sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <img src="macs_logo.png" alt="MACS Logo" class="w-10 h-10 object-contain rounded-full shadow-lg">
+                    <span class="font-bold tracking-tight text-lg text-gray-900 dark:text-white">Admin<span
+                            class="text-brand-600 dark:text-brand-500">Panel</span></span>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <span id="adminName" class="text-sm font-medium text-gray-500 dark:text-gray-400"></span>
+                    <button onclick="logout()"
+                        class="text-xs font-semibold bg-gray-200 dark:bg-white/10 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-white/20 px-4 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-white/20 transition-colors">LOGOUT</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-6 py-10">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Left Column: Actions -->
+            <div class="space-y-8 lg:col-span-1">
+                <!-- POTD Setter -->
+                <div class="glass p-6 rounded-2xl">
+                    <h2 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-6">Daily
+                        Problem</h2>
+                    <form id="potdForm" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 dark:text-gray-500 mb-2">PROBLEM ID
+                                (e.g. 1950B)</label>
+                            <input type="text" id="problemId" required
+                                class="w-full bg-white dark:bg-[#1a1d24] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-brand-500 transition-colors"
+                                placeholder="Enter ID...">
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-brand-600 hover:bg-brand-500 text-white font-medium py-3 rounded-xl text-sm transition-colors shadow-lg shadow-brand-500/20">
+                            Set Active Problem
+                        </button>
+                    </form>
+                    <p id="potdMessage" class="mt-4 text-xs text-center min-h-[1.5em]"></p>
+                </div>
+
+                <!-- Run Check -->
+                <div class="glass p-6 rounded-2xl">
+                    <h2 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-6">
+                        Verification</h2>
+                    <p class="text-xs text-gray-500 dark:text-gray-500 mb-4 leading-relaxed">Scan all approved users
+                        against the current
+                        POTD to update status.</p>
+                    <button onclick="checkProblem()"
+                        class="w-full bg-white dark:bg-[#1a1d24] border border-gray-200 dark:border-gray-800 hover:border-brand-500 dark:hover:border-gray-700 text-gray-700 dark:text-gray-300 font-medium py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                            </path>
+                        </svg>
+                        Run Solve Check
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column: Data -->
+            <div class="lg:col-span-2 space-y-8">
+
+                <!-- Check Results -->
+                <div id="checkResults" class="hidden glass p-6 rounded-2xl border-l-4 border-l-green-500/50">
+                    <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                        Results: <span id="checkedProblemId" class="font-mono text-gray-500 dark:text-gray-400"></span>
+                    </h3>
+                    <div class="overflow-x-auto max-h-64 overflow-y-auto">
+                        <table class="min-w-full text-left text-sm">
+                            <thead
+                                class="text-xs text-gray-500 font-medium uppercase border-b border-gray-200 dark:border-gray-800">
+                                <tr>
+                                    <th class="px-3 py-2">Name</th>
+                                    <th class="px-3 py-2">Handle</th>
+                                    <th class="px-3 py-2 text-right">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="checkResultsBody"
+                                class="divide-y divide-gray-200 dark:divide-gray-800 text-gray-700 dark:text-gray-300">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pending Users -->
+                <div class="glass rounded-2xl overflow-hidden">
+                    <div class="p-6 border-b border-gray-200 dark:border-gray-800">
+                        <h2 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Access
+                            Requests</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-left text-sm">
+                            <thead class="bg-gray-50 dark:bg-[#1a1d24] text-xs text-gray-500 font-medium uppercase">
+                                <tr>
+                                    <th class="px-6 py-3">User Details</th>
+                                    <th class="px-6 py-3">CF Handle</th>
+                                    <th class="px-6 py-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pendingUsersBody"
+                                class="divide-y divide-gray-200 dark:divide-gray-800 bg-white dark:bg-transparent text-gray-900 dark:text-white">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                        <div id="noPendingMsg" class="p-8 text-center text-gray-500 dark:text-gray-600 text-sm hidden">
+                            All caught up! No pending requests.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/theme.js"></script>
+</body>
+
+</html>
